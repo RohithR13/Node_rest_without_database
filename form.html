@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Communication</title>
+</head>
+<body>
+    <h2 id ="header" align="center">User Details Form</h2>
+   <fieldset align="center">
+    <form id="myForm">
+        <label>Id
+            <input type="number" id="id" name="id" />
+        </label>
+    <br><br>
+        <label>Name
+            <input type="text" id="name" name="name" />
+        </label>
+        <br><br>
+        <label>Place 
+            <input type="text" id="place" name="place" />
+        </label>
+        <br><br>
+        <button type="submit" id="submit" name="submit" >submit</button>
+        
+    </form>
+    <br><br>
+    <button id = "show" > show </button>
+    
+    </fieldset>
+    <div id="users">
+        <h3 >current user details</h3>
+        <ul id="userlist"></ul>
+    </div>
+    
+    <script>
+        let formHandler = document.getElementById("myForm")
+        let divHandler =document.getElementById("users")
+        let list = document.getElementById("userlist")
+        let buttonHandler = document.getElementById("show")
+        let updateHandler = document.getElementById("update")
+        
+        buttonHandler.addEventListener("click",function(){
+            console.log(list)
+                  while(list.firstChild){
+                      list.removeChild(list.firstChild)
+                  }
+            
+            fetch("http://localhost:3000/users").then(response=>response.json()).then(function(data){
+                console.log(data)
+              data.forEach(function(user,index){
+                  
+
+                  let li1 = document.createElement('li')
+                  li1.innerHTML = `ID :<b> ${user.id}</b>`
+                  console.log(user.id)
+                  list.appendChild(li1)
+                  let li2 =document.createElement('li')
+                  li2.innerHTML = `NAME : <b>${user.name}<b>`
+                  console.log(user.name)
+                  list.appendChild(li2)
+                  let li3 =document.createElement('li')
+                  li3.innerHTML = `PLACE : <b> ${user.place}<b>`
+                  console.log(user.place)
+                  list.appendChild(li3)
+                  
+                  
+
+        })
+    })})
+        formHandler.addEventListener("submit",function(event){
+            event.preventDefault();
+            
+            fetch("http://localhost:3000/users",{
+                method:'POST',
+                body:JSON.stringify({
+                    id:(event.target.id.value),
+                    name:String(event.target.name.value),
+                    place:String(event.target.place.value)
+                }),
+                headers:{"CONTENT-TYPE":"application/json"}
+            }).then(response=>response.json()).then(data=>console.log(data))
+            
+              
+     
+            
+
+              })
+
+           
+         
+        
+
+    </script>
+</body>
+</html>
